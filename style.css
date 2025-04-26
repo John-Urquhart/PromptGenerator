@@ -1,0 +1,102 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4f8;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+h1, h2 {
+    color: #2c3e50;
+}
+label {
+    font-weight: bold;
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+select, button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+button:hover {
+    background-color: #2980b9;
+}
+#output {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    font-size: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+#historyList {
+    list-style-type: none;
+    padding: 0;
+}
+#historyList li {
+    background: #ffffff;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+    transition: transform 0.2s;
+}
+#historyList li:hover {
+    transform: scale(1.02);
+    background-color: #e6f7ff;
+}
+
+/* Modal Background */
+#promptModal {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0,0,0,0.7);
+display: flex;
+align-items: center;
+justify-content: center;
+z-index: 1000;
+}
+
+/* Modal Content Box */
+#modalContent {
+background: white;
+padding: 30px;
+border-radius: 12px;
+width: 90%;
+max-width: 600px;
+text-align: center;
+position: relative;
+box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Close Button */
+#closeModal {
+position: absolute;
+top: 10px;
+right: 20px;
+font-size: 28px;
+font-weight: bold;
+cursor: pointer;
+color: #555;
+}
+#closeModal:hover {
+color: #000;
+}
+
+
