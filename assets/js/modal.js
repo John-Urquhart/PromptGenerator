@@ -16,25 +16,6 @@ export function closeModal() {
   }
 }
 
-// Copy the prompt text to clipboard and show success popup
-export function copyToClipboard() {
-  const promptText = document.getElementById("modalPrompt").innerText;
-  if (!promptText) {
-    alert("No prompt to copy yet!");
-    return;
-  }
-
-  navigator.clipboard
-    .writeText(promptText)
-    .then(() => {
-      showCopiedPopup();
-    })
-    .catch((err) => {
-      console.error("Failed to copy text:", err);
-      alert("Failed to copy prompt.");
-    });
-}
-
 // Show a small "Copied!" popup
 function showCopiedPopup() {
   let popup = document.createElement("div");
@@ -66,4 +47,28 @@ function showCopiedPopup() {
       document.body.removeChild(popup);
     }, 500);
   }, 2500);
+}
+
+// Copy the prompt text to clipboard
+export function copyToClipboard() {
+  console.log("Copy button clicked."); // DEBUG
+
+  const promptText = document.getElementById("modalPrompt").innerText;
+  console.log("Prompt to copy:", promptText); // DEBUG
+
+  if (!promptText) {
+    alert("No prompt to copy yet!");
+    return;
+  }
+
+  navigator.clipboard
+    .writeText(promptText)
+    .then(() => {
+      console.log("Copied successfully."); // DEBUG
+      showCopiedPopup();
+    })
+    .catch((err) => {
+      console.error("Failed to copy text:", err);
+      alert("Failed to copy prompt.");
+    });
 }

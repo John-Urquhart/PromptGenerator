@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Test Save Prompt</title>
+  </head>
+  <body>
+    <h1>Test Save to Database</h1>
+
+    <button id="testSaveBtn">Test Save Prompt</button>
+
+    <script>
+      document.getElementById("testSaveBtn").onclick = function () {
+        const testPromptData = {
+          treatment: "High quality, masterpiece",
+          artStyle: "Watercolour",
+          animal_character: "Test Cat",
+          subcategory: "Siamese Cat",
+          pose: "Yoga Pose",
+          catchphrase: "Stay Pawsitive!",
+          humour: "Wholesome & Warm",
+          custom: "Test save from button click",
+        };
+
+        fetch("save_prompt.php", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(testPromptData),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Server response:", data);
+            alert(data.message);
+          })
+          .catch((error) => {
+            console.error("Error saving to database:", error);
+            alert("Failed to contact server.");
+          });
+      };
+    </script>
+  </body>
+</html>

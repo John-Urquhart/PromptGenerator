@@ -39,7 +39,7 @@ export function generatePrompt() {
     parts.push(`Humour Style: ${humour}`);
   }
   if (custom) {
-    parts.push(`Additional Notes: ${custom}`);
+    parts.push(`Also: ${custom}`);
   }
 
   if (parts.length === 0) {

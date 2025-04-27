@@ -1,0 +1,9 @@
+/assets
+    /css
+        style.css
+    /js
+        prompt.js
+        modal.js
+        history.js
+        events.js
+index.html

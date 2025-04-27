@@ -3,6 +3,7 @@
 import { generatePrompt } from "./prompt.js";
 import { closeModal } from "./modal.js";
 import { savePrompt, displayHistory, clearHistory } from "./history.js";
+import { copyToClipboard } from "./modal.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   // Button Listeners
@@ -10,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("saveBtn").onclick = savePrompt;
   document.getElementById("clearBtn").onclick = clearHistory;
   document.getElementById("closeModal").onclick = closeModal;
+  document.getElementById("copyBtn").onclick = copyToClipboard;
 
   // Close modal on outside click
   window.onclick = function (event) {
