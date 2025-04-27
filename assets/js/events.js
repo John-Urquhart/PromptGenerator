@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   // Show subcategory if "Cat" selected
-  document.getElementById("character").addEventListener("change", function () {
+  document.getElementById("characterDropdown").addEventListener("change", function () {
     const character = this.value;
     const subcategoryContainer = document.getElementById(
       "subcategoryContainer"
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
       subcategoryContainer.style.display = "block";
     } else {
       subcategoryContainer.style.display = "none";
-      document.getElementById("subcategory").value = "";
+      document.getElementById("subcategoryDropdown").value = "";
     }
   });
 

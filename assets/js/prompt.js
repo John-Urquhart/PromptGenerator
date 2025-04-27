@@ -4,14 +4,14 @@ import { openModal } from "./modal.js";
 import { getValue } from "./utils.js";
 
 export function generatePrompt() {
-  const treatment = getValue("treatment");
-  const artStyle = getValue("artStyle");
-  const character = getValue("character");
-  const subcategory = getValue("subcategory");
-  const pose = getValue("pose");
-  const catchphrase = getValue("catchphrase");
-  const humour = getValue("humour");
-  const custom = getValue("custom");
+  const treatment = getValue("treatmentDropdown");
+  const artStyle = getValue("artStyleDropdown");
+  const character = getValue("characterDropdown");
+  const subcategory = getValue("subcategoryDropdown");
+  const pose = getValue("poseDropdown");
+  const catchphrase = getValue("catchphraseDropdown");
+  const humour = getValue("humourDropdown");
+  const custom = getValue("customInput");
 
   let parts = [];
 
@@ -30,25 +30,22 @@ export function generatePrompt() {
   }
 
   if (artStyle) {
-    parts.push(`in a ${artStyle} style`);
+    parts.push(`in ${artStyle} style`);
   }
-  if (catchphrase) {
-    parts.push(`Catchphrase: "${catchphrase}"`);
-  }
+
   if (humour) {
-    parts.push(`Humour Style: ${humour}`);
+    parts.push(`with ${humour} humour`);
   }
+
+  if (catchphrase) {
+    parts.push(`saying "${catchphrase}"`);
+  }
+
   if (custom) {
-    parts.push(`Also: ${custom}`);
+    parts.push(custom);
   }
 
-  if (parts.length === 0) {
-    alert("Please select at least one field to generate a prompt.");
-    return;
-  }
-
-  const prompt = parts.join(". ") + ".";
-
-  document.getElementById("modalPrompt").innerText = prompt;
-  openModal();
+  const prompt = parts.join(", ");
+  openModal(prompt);
+  return prompt;
 }

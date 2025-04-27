@@ -13,7 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
     <!-- Load Dropdowns -->
-    <script src="assets/js/load_dropdowns.js"></script>
+    <script type="module" src="assets/js/load_dropdowns.js"></script>
 
     <link rel="stylesheet" href="assets/css/style.css" />
   </head>
@@ -65,9 +65,9 @@
     ><br />
 
     <!-- Custom Text Area -->
-    <label for="custom">Add Custom Ideas:</label><br />
+    <label for="customInput">Add Custom Ideas:</label><br />
     <textarea
-      id="custom"
+      id="customInput"
       rows="3"
       placeholder="Extra creative ideas..."
     ></textarea
@@ -94,6 +94,6 @@
 
     <!-- Link to main JavaScript controller -->
     <script type="module" src="assets/js/events.js"></script>
-    <script src="assets/js/database.js"></script>
+    <script type="module" src="assets/js/database.js"></script>
   </body>
 </html>

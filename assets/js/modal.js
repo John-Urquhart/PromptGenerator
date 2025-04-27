@@ -1,9 +1,12 @@
 // --- modal.js ---
 
 // Open the prompt modal
-export function openModal() {
+export function openModal(promptText) {
   const modal = document.getElementById("promptModal");
-  if (modal) {
+  const modalPrompt = document.getElementById("modalPrompt");
+  
+  if (modal && modalPrompt) {
+    modalPrompt.innerText = promptText;
     modal.style.display = "flex";
   }
 }
@@ -29,46 +32,41 @@ function showCopiedPopup() {
   popup.style.borderRadius = "8px";
   popup.style.boxShadow = "0 2px 10px rgba(0,0,0,0.3)";
   popup.style.fontSize = "16px";
-  popup.style.zIndex = "9999";
+  popup.style.zIndex = "10000";
   popup.style.opacity = "0";
-  popup.style.transition = "opacity 0.5s ease";
+  popup.style.transition = "opacity 0.3s ease-in-out";
 
   document.body.appendChild(popup);
 
-  // Animate popup
+  // Trigger fade in
   setTimeout(() => {
     popup.style.opacity = "1";
-  }, 100);
+  }, 10);
 
-  // Remove popup after 2.5 seconds
+  // Remove after animation
   setTimeout(() => {
     popup.style.opacity = "0";
     setTimeout(() => {
       document.body.removeChild(popup);
-    }, 500);
-  }, 2500);
+    }, 300);
+  }, 2000);
 }
 
 // Copy the prompt text to clipboard
 export function copyToClipboard() {
-  console.log("Copy button clicked."); // DEBUG
-
   const promptText = document.getElementById("modalPrompt").innerText;
-  console.log("Prompt to copy:", promptText); // DEBUG
-
   if (!promptText) {
-    alert("No prompt to copy yet!");
+    alert("No prompt to copy!");
     return;
   }
 
   navigator.clipboard
     .writeText(promptText)
     .then(() => {
-      console.log("Copied successfully."); // DEBUG
       showCopiedPopup();
     })
     .catch((err) => {
-      console.error("Failed to copy text:", err);
-      alert("Failed to copy prompt.");
+      console.error("Failed to copy text: ", err);
+      alert("Failed to copy to clipboard");
     });
 }

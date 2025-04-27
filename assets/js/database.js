@@ -1,4 +1,4 @@
-function savePromptToDatabase(promptData) {
+export function savePromptToDatabase(promptData) {
   fetch("save_prompt.php", {
     method: "POST",
     headers: {

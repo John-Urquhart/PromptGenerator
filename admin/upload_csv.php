@@ -1,121 +1,130 @@
 <?php
 session_start();
-require_once 'db_connect.php';
-
-// Check admin authentication
-if (!isset($_SESSION['admin_authenticated']) || $_SESSION['admin_authenticated'] !== true) {
-    header('Location: login.php');
-    exit();
-}
+require_once '../db_connect.php';
 
 // Verify CSRF token
-if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
-    $_SESSION['upload_message'] = "Invalid security token.";
-    $_SESSION['upload_success'] = false;
+if (!isset($_POST['csrf_token']) || !isset($_SESSION['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    $_SESSION['upload_error'] = "Invalid request";
     header('Location: upload_csv_form.php');
     exit();
 }
 
-// Allow only specific tables and their columns
-$allowedTables = [
-    'poses' => 'pose_name',
-    'animal_characters' => 'character_name',
-    'art_styles' => 'style_name',
-    'humour_styles' => 'humour_name',
-    'catchphrases' => 'catchphrase_text',
-    'treatments' => 'treatment_text'
-];
+// Verify file upload
+if (!isset($_FILES['csvFile']) || $_FILES['csvFile']['error'] !== UPLOAD_ERR_OK) {
+    $_SESSION['upload_error'] = "File upload failed";
+    header('Location: upload_csv_form.php');
+    exit();
+}
 
-// Check if form was submitted
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $table = $_POST['table'] ?? '';
-    $file = $_FILES['csvFile'] ?? null;
+// Check file type
+$mimeType = mime_content_type($_FILES['csvFile']['tmp_name']);
+if ($mimeType !== 'text/csv' && $mimeType !== 'text/plain') {
+    $_SESSION['upload_error'] = "Invalid file type. Please upload a CSV file.";
+    header('Location: upload_csv_form.php');
+    exit();
+}
 
-    if (!$table || !$file) {
-        $_SESSION['upload_message'] = "Missing table selection or file upload.";
-        $_SESSION['upload_success'] = false;
-        header('Location: upload_csv_form.php');
-        exit();
+// Function to validate table name
+function isValidTable($table) {
+    $validTables = [
+        'treatments' => 'treatment_text',
+        'art_styles' => 'style_name',
+        'animal_characters' => 'character_name',
+        'poses' => 'pose_name',
+        'catchphrases' => 'catchphrase_text',
+        'humour_styles' => 'humour_name'
+    ];
+    return isset($validTables[$table]) ? $validTables[$table] : false;
+}
+
+// Start transaction
+$conn->begin_transaction();
+
+try {
+    $file = fopen($_FILES['csvFile']['tmp_name'], 'r');
+    if (!$file) {
+        throw new Exception("Could not open CSV file");
     }
 
-    // Validate allowed table
-    if (!isset($allowedTables[$table])) {
-        $_SESSION['upload_message'] = "Invalid table selection.";
-        $_SESSION['upload_success'] = false;
-        header('Location: upload_csv_form.php');
-        exit();
+    // Skip header row
+    $header = fgetcsv($file);
+    if (!$header) {
+        throw new Exception("Empty CSV file");
     }
 
-    // Validate uploaded file
-    if ($file['type'] !== 'text/csv' && pathinfo($file['name'], PATHINFO_EXTENSION) !== 'csv') {
-        $_SESSION['upload_message'] = "Only CSV files are allowed.";
-        $_SESSION['upload_success'] = false;
-        header('Location: upload_csv_form.php');
-        exit();
-    }
+    $uploadType = $_POST['upload_type'] ?? 'individual';
+    $successCount = 0;
+    $errors = [];
 
-    // Open the uploaded CSV file
-    if (($handle = fopen($file['tmp_name'], 'r')) !== false) {
-        $column = $allowedTables[$table];
-        $successCount = 0;
-        $errorCount = 0;
-        $row = 0;
+    if ($uploadType === 'combined') {
+        // Process combined CSV format
+        while (($row = fgetcsv($file)) !== false) {
+            if (count($row) < 3) continue; // Skip invalid rows
 
-        // Start transaction
-        $conn->begin_transaction();
+            $table = trim($row[0]);
+            $column = trim($row[1]);
+            $value = trim($row[2]);
 
-        try {
-            // Prepare statement once outside the loop
-            $stmt = $conn->prepare("INSERT INTO `$table` (`$column`) VALUES (?)");
-
-            while (($data = fgetcsv($handle, 1000, ",")) !== false) {
-                $row++;
-                
-                // Skip header row
-                if ($row === 1) {
-                    continue;
-                }
-
-                $value = trim($data[0] ?? '');
-
-                if ($value !== '') {
-                    $stmt->bind_param("s", $value);
-
-                    if ($stmt->execute()) {
-                        $successCount++;
-                    } else {
-                        $errorCount++;
-                        error_log("Error inserting row $row: " . $stmt->error);
-                    }
-                }
+            // Validate table and column
+            $expectedColumn = isValidTable($table);
+            if (!$expectedColumn || $expectedColumn !== $column) {
+                $errors[] = "Invalid table or column: $table.$column";
+                continue;
             }
 
-            // If no errors, commit the transaction
-            if ($errorCount === 0) {
-                $conn->commit();
-                $_SESSION['upload_message'] = "Successfully inserted $successCount records.";
-                $_SESSION['upload_success'] = true;
+            // Insert data
+            $stmt = $conn->prepare("INSERT IGNORE INTO `$table` (`$column`) VALUES (?)");
+            $stmt->bind_param('s', $value);
+            if ($stmt->execute()) {
+                $successCount++;
             } else {
-                throw new Exception("Some records failed to insert.");
+                $errors[] = "Error inserting into $table: " . $stmt->error;
             }
-
-        } catch (Exception $e) {
-            $conn->rollback();
-            $_SESSION['upload_message'] = "Error: " . $e->getMessage() . " ($successCount successful, $errorCount failed)";
-            $_SESSION['upload_success'] = false;
+            $stmt->close();
+        }
+    } else {
+        // Process individual table CSV
+        $table = $_POST['table'] ?? '';
+        $column = isValidTable($table);
+        
+        if (!$column) {
+            throw new Exception("Invalid table selected");
         }
 
-        fclose($handle);
-        $stmt->close();
-    } else {
-        $_SESSION['upload_message'] = "Error reading CSV file.";
-        $_SESSION['upload_success'] = false;
+        // Process each row
+        while (($row = fgetcsv($file)) !== false) {
+            if (empty($row[0])) continue;
+            $value = trim($row[0]);
+
+            $stmt = $conn->prepare("INSERT IGNORE INTO `$table` (`$column`) VALUES (?)");
+            $stmt->bind_param('s', $value);
+            if ($stmt->execute()) {
+                $successCount++;
+            } else {
+                $errors[] = "Error inserting: " . $stmt->error;
+            }
+            $stmt->close();
+        }
     }
 
-    header('Location: upload_csv_form.php');
-    exit();
+    fclose($file);
+
+    // If there were any errors, throw them
+    if (!empty($errors)) {
+        throw new Exception("Completed with errors: " . implode(", ", $errors));
+    }
+
+    // Commit transaction
+    $conn->commit();
+    $_SESSION['upload_success'] = "Successfully inserted $successCount records.";
+
+} catch (Exception $e) {
+    // Rollback transaction
+    $conn->rollback();
+    $_SESSION['upload_error'] = $e->getMessage();
 }
 
-// If we get here, it wasn't a POST request
+// Redirect back to form
 header('Location: upload_csv_form.php');
 exit();
+?>

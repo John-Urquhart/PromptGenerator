@@ -1,5 +1,7 @@
 // assets/js/history.js
 
+import { savePromptToDatabase } from "./database.js";
+
 // Helper function to safely get form values
 function getValue(id) {
   const element = document.getElementById(id);
@@ -20,29 +22,28 @@ export function savePrompt() {
 
   // Build data with correct field names matching PHP backend
   const promptData = {
-    treatment: getValue("treatment"),
-    artStyle: getValue("artStyle"),
-    animal_character: getValue("character"), // Match PHP field name
-    subcategory: getValue("subcategory"),
-    pose: getValue("pose"),
-    catchphrase: getValue("catchphrase"),
-    humour: getValue("humour"),
-    custom: getValue("custom"),
+    treatment: getValue("treatmentDropdown"),
+    artStyle: getValue("artStyleDropdown"),
+    animal_character: getValue("characterDropdown"), // Match PHP field name
+    subcategory: getValue("subcategoryDropdown"),
+    pose: getValue("poseDropdown"),
+    catchphrase: getValue("catchphraseDropdown"),
+    humour: getValue("humourDropdown"),
+    custom: getValue("customInput"),
   };
 
-  console.log("Saving to database:", promptData); // Debug log
+  // Save to database
   savePromptToDatabase(promptData);
 }
 
 export function displayHistory() {
+  const history = JSON.parse(localStorage.getItem("promptHistory")) || [];
   const historyList = document.getElementById("historyList");
   historyList.innerHTML = "";
 
-  let history = JSON.parse(localStorage.getItem("promptHistory")) || [];
-
-  history.forEach((item) => {
+  history.forEach((prompt) => {
     const li = document.createElement("li");
-    li.textContent = item;
+    li.textContent = prompt;
     historyList.appendChild(li);
   });
 }
@@ -57,25 +58,4 @@ export function clearHistory() {
     displayHistory();
     alert("Prompt history cleared.");
   }
-}
-
-function savePromptToDatabase(promptData) {
-  fetch("save_prompt.php", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(promptData),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("Server response:", data);
-      if (!data.success) {
-        alert("Failed to save to database: " + data.message);
-      }
-    })
-    .catch((error) => {
-      console.error("Error saving to database:", error);
-      alert("Error saving to database.");
-    });
 }
