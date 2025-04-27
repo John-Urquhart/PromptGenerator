@@ -12,154 +12,56 @@
     <!-- Choices.js JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
+    <!-- Load Dropdowns -->
+    <script src="assets/js/load_dropdowns.js"></script>
+
     <link rel="stylesheet" href="assets/css/style.css" />
   </head>
   <body>
     <h1>SeaArt Prompt Generator</h1>
 
     <!-- Art Treatment -->
-    <label for="treatment">Choose an Art Treatment:</label><br />
-    <select id="treatment">
-      <option value="">-- None --</option>
-      <option
-        value="High quality, masterpiece, realistic and detailed depiction"
-      >
-        High quality, masterpiece, realistic and detailed depiction
-      </option>
-      <option value="Cinematic, film still, moody lighting">
-        Cinematic, film still, moody lighting
-      </option>
-      <option value="Surreal, dreamlike, imaginative fantasy">
-        Surreal, dreamlike, imaginative fantasy
-      </option>
-      <option
-        value="Vibrant colours, painterly texture, expressive brushstrokes"
-      >
-        Vibrant colours, painterly texture, expressive brushstrokes
-      </option>
-      <option value="Vintage photograph, sepia tone, nostalgic feel">
-        Vintage photograph, sepia tone, nostalgic feel
-      </option>
-      <option value="Minimalist, clean lines, soft pastels">
-        Minimalist, clean lines, soft pastels
-      </option>
-      <option value="Hyperrealistic, photorealistic detail, sharp focus">
-        Hyperrealistic, photorealistic detail, sharp focus
-      </option>
-      <option value="Retro cartoon, 1980s animation style, bold outlines">
-        Retro cartoon, 1980s animation style, bold outlines
-      </option>
-      <option value="Elegant fantasy, soft lighting, magical atmosphere">
-        Elegant fantasy, soft lighting, magical atmosphere
-      </option>
-      <option value="Dark fantasy, gothic mood, muted colours">
-        Dark fantasy, gothic mood, muted colours
-      </option></select
+    <label for="treatmentDropdown">Choose an Art Treatment:</label><br />
+    <select id="treatmentDropdown">
+      <option value="">Select an Art Treatment</option></select
     ><br />
 
     <!-- Art Style -->
-    <label for="artStyle">Choose an Art Style:</label><br />
-    <select id="artStyle">
-      <option value="">-- None --</option>
-      <option value="Watercolour">Watercolour</option>
-      <option value="Digital Painting">Digital Painting</option>
-      <option value="Line Art">Line Art</option>
-      <option value="Cute Cartoon">Cute Cartoon</option>
-      <option value="Charcoal Sketch">Charcoal Sketch</option>
-      <option value="Oil Painting">Oil Painting</option>
-      <option value="Acrylic Painting">Acrylic Painting</option>
-      <option value="Pastel Drawing">Pastel Drawing</option>
-      <option value="Ink Illustration">Ink Illustration</option>
-      <option value="Vector Art">Vector Art</option>
-      <option value="Pixel Art">Pixel Art</option>
-      <option value="3D Render">3D Render</option>
-      <option value="Pop Art">Pop Art</option>
-      <option value="Vintage Poster Style">Vintage Poster Style</option></select
+    <label for="artStyleDropdown">Choose an Art Style:</label><br />
+    <select id="artStyleDropdown">
+      <option value="">Select an Art Style</option></select
     ><br />
 
     <!-- Character -->
-    <label for="character">Choose a Character:</label><br />
-    <select id="character">
-      <option value="">-- None --</option>
-      <option value="Cat">Cat</option>
-      <option value="Dog">Dog</option>
-      <option value="Pug">Pug</option>
-      <option value="Bulldog">Bulldog</option>
-      <option value="Octopus">Octopus</option>
-      <option value="Mermaid Cat">Mermaid Cat</option>
-      <option value="Pirate Parrot">Pirate Parrot</option>
-      <option value="Sea Turtle">Sea Turtle</option>
-      <option value="Yoga Sloth">Yoga Sloth</option>
-      <option value="Seahorse">Seahorse</option>
-      <option value="Dolphin">Dolphin</option>
-      <option value="Starfish">Starfish</option>
-      <option value="Hedgehog">Hedgehog</option>
-      <option value="Bear">Bear</option>
-      <option value="Tortoise">Tortoise</option></select
+    <label for="characterDropdown">Choose a Character:</label><br />
+    <select id="characterDropdown">
+      <option value="">Select a Character</option></select
     ><br />
 
     <!-- Subcategory (only for Cat) -->
     <div id="subcategoryContainer" style="display: none">
-      <label for="subcategory">Choose Specific Type:</label><br />
-      <select id="subcategory">
-        <option value="">-- None --</option>
-        <option value="Tabby Cat">Tabby Cat</option>
-        <option value="Felix Cat">Felix Cat</option>
-        <option value="Siamese Cat">Siamese Cat</option>
-        <option value="Persian Cat">Persian Cat</option></select
+      <label for="subcategoryDropdown">Choose Specific Type:</label><br />
+      <select id="subcategoryDropdown">
+        <option value="">Select a Subcategory</option></select
       ><br />
     </div>
 
     <!-- Pose -->
-    <label for="pose">Choose a Pose:</label><br />
-    <select id="pose">
-      <option value="">-- None --</option>
-      <option value="Downward Dog">Downward Dog</option>
-      <option value="Tree Pose">Tree Pose</option>
-      <option value="Lotus Pose">Lotus Pose</option>
-      <option value="Surfing a Wave">Surfing a Wave</option>
-      <option value="Sleeping on a Hammock">Sleeping on a Hammock</option>
-      <option value="Balancing on a Beach Ball">
-        Balancing on a Beach Ball
-      </option>
-      <option value="Meditating Underwater">Meditating Underwater</option>
-      <option value="Dancing in the Rain">Dancing in the Rain</option>
-      <option value="Fishing with a Rod">Fishing with a Rod</option>
-      <option value="Lounging on a Deckchair">
-        Lounging on a Deckchair
-      </option></select
+    <label for="poseDropdown">Choose a Pose:</label><br />
+    <select id="poseDropdown">
+      <option value="">Select a Pose</option></select
     ><br />
 
     <!-- Catchphrase -->
-    <label for="catchphrase">Choose a Catchphrase:</label><br />
-    <select id="catchphrase">
-      <option value="">-- None --</option>
-      <option value="Namast’ay in Bed">Namast’ay in Bed</option>
-      <option value="Paws and Reflect">Paws and Reflect</option>
-      <option value="Shell Yeah!">Shell Yeah!</option>
-      <option value="Stay Salty">Stay Salty</option>
-      <option value="Let’s Get Shipfaced">Let’s Get Shipfaced</option>
-      <option value="Seas the Day">Seas the Day</option>
-      <option value="Donut Worry, Be Happy">Donut Worry, Be Happy</option>
-      <option value="Keep Calm and Paddle On">Keep Calm and Paddle On</option>
-      <option value="Beach, Please!">Beach, Please!</option>
-      <option value="I'm Shore You Can!">I'm Shore You Can!</option></select
+    <label for="catchphraseDropdown">Choose a Catchphrase:</label><br />
+    <select id="catchphraseDropdown">
+      <option value="">Select a Catchphrase</option></select
     ><br />
 
     <!-- Humour Style -->
-    <label for="humour">Choose a Humour Style:</label><br />
-    <select id="humour">
-      <option value="">-- None --</option>
-      <option value="Chill & Punny">Chill & Punny</option>
-      <option value="Sarcastic & Dry">Sarcastic & Dry</option>
-      <option value="Silly & Playful">Silly & Playful</option>
-      <option value="Inspirational & Sweet">Inspirational & Sweet</option>
-      <option value="Edgy & Bold">Edgy & Bold</option>
-      <option value="Wholesome & Warm">Wholesome & Warm</option>
-      <option value="Dark Humour">Dark Humour</option>
-      <option value="Retro Fun">Retro Fun</option>
-      <option value="Modern Sassy">Modern Sassy</option>
-      <option value="Zen and Minimalist">Zen and Minimalist</option></select
+    <label for="humourDropdown">Choose a Humour Style:</label><br />
+    <select id="humourDropdown">
+      <option value="">Select a Humour Style</option></select
     ><br />
 
     <!-- Custom Text Area -->

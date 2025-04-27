@@ -1,9 +1,23 @@
-/assets
-    /css
-        style.css
-    /js
-        prompt.js
-        modal.js
-        history.js
-        events.js
-index.html
+/PromptGenerator/
+│
+├── index.html                # Main public page (user side)
+├── db_connect.php             # Shared DB connection
+├── get_list.php               # Dynamic list API for frontend
+├── upload_csv.php             # Backend CSV upload handler (admin only)
+├── /admin                     # 🔥 Admin area folder
+│   ├── admin_panel.php        # Admin dashboard main page
+│   ├── upload_csv_form.php    # CSV upload page (or include inside admin_panel.php)
+│   ├── (optional future: add_item.php) # API to add items manually
+│   ├── (optional future: edit/delete pages)
+│
+├── /assets
+│   ├── /css
+│   │   └── style.css
+│   ├── /js
+│   │   ├── prompt.js
+│   │   ├── modal.js
+│   │   ├── history.js
+│   │   ├── events.js
+│   │   └── load_dropdowns.js
+│
+└── README.md
